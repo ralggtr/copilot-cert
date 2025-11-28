@@ -92,17 +92,26 @@ section h3 {
 }
 
 .activity-participants li {
-  padding: 5px 0 5px 20px;
+  padding: 5px 0;
   position: relative;
   color: #555;
   font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.activity-participants li:before {
-  content: "●";
-  position: absolute;
-  left: 5px;
-  color: #1a237e;
+.delete-icon {
+  cursor: pointer;
+  color: #c62828;
+  font-size: 18px;
+  padding: 0 5px;
+  transition: color 0.2s;
+}
+
+.delete-icon:hover {
+  color: #d32f2f;
+  font-weight: bold;
 }
 
 .activity-participants .no-participants {

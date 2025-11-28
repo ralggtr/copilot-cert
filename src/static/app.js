@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <h5>Current Participants (${details.participants.length}):</h5>
             <ul>
               ${details.participants.length > 0 
-                ? details.participants.map(email => `<li>${email}</li>`).join('')
+                ? details.participants.map(email => `<li><span>${email}</span><span class="delete-icon" data-activity="${name}" data-email="${email}" title="Remove participant">🗑️</span></li>`).join('')
                 : '<li class="no-participants">No participants yet</li>'
               }
             </ul>
@@ -107,6 +107,37 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.classList.add("hidden");
     }, 5000);
   }
+
+  // Handle delete participant
+  document.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("delete-icon")) {
+      const activity = event.target.dataset.activity;
+      const email = event.target.dataset.email;
+
+      if (confirm(`Are you sure you want to unregister ${email} from ${activity}?`)) {
+        try {
+          const response = await fetch(
+            `/activities/${encodeURIComponent(activity)}/unregister?email=${encodeURIComponent(email)}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            showMessage(data.message, "success");
+            fetchActivities();
+          } else {
+            showMessage(data.detail || "Unregister failed", "error");
+          }
+        } catch (error) {
+          console.error("Error unregistering:", error);
+          showMessage("An error occurred. Please try again.", "error");
+        }
+      }
+    }
+  });
 
   // Initialize app
   fetchActivities();
